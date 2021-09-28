@@ -10,6 +10,7 @@ const config = {
     paren: 'contenedor',
     pixelArt: true,
     backgroundColor: '#34495e',
+    zoom: 1.5,
     banner: {
         hidePhaser: true,
         text: '#fff00f',

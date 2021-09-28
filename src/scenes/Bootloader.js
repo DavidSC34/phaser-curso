@@ -10,33 +10,53 @@ class Bootloader extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.image(['cubix', 'cubix_fondo']);
+        //cargar el dropzone boot
+        this.load.image('drop', 'drop.png');
     }
 
     create() {
-        this.cubix = this.add.image(100, 100, 'cubix');
-        const events = Phaser.Input.Events;
-        const keyboard = Phaser.Input.Keyboard;
+        this.cubix = this.add.image(100, 100, 'cubix').setInteractive();
+        this.input.setDraggable(this.cubix); //--> hacer draggable el objeto
 
-        //Ocultar o bloquear el mouse en el canvas
-        this.input.on(events.POINTER_DOWN, () => {
-            this.input.mouse.requestPointerLock();
+        this.drop = this.add.image(100, 250, 'drop').setDepth(-1).setInteractive();
+        //convertir el objeto en un objeto de dropzone
+        this.drop.input.dropZone = true;
+
+
+        const eventos = Phaser.Input.Events;
+        this.input.on(eventos.DRAG_START, (pointer, obj, dragX, dragY) => {
+            obj.setScale(0.7);
+        });
+        this.input.on(eventos.DRAG, (pointer, obj, dragX, dragY) => {
+            obj.x = dragX;
+            obj.y = dragY;
         });
 
-        this.input.on(events.POINTER_MOVE, (pointer) => {
-            // this.cubix.x = pointer.worldX; //->solo funciona cuando no se bloquea el mouse
+        this.input.on(eventos.DRAG_END, (pointer, obj, dropZone) => {
 
-            //Se suma ya que avanza en coordenadas del canvas, si no se quedaria en lugar fijo
-            if (this.input.mouse.locked) {
+            //Si no esta en la zona de dropzone, regrese al punto de partida
 
-                this.cubix.x += pointer.movementX;
-                this.cubix.y += pointer.movementY;
+            if (!dropZone) {
+                obj.x = obj.input.dragStartX;
+                obj.y = obj.input.dragStartY;
             }
+            //regresar el objeto a su tamaño normal
+            obj.setScale(1);
+
         });
-        //Desbloquea el raton presionando la tecla A
-        this.input.keyboard.addKey(keyboard.KeyCodes.A)
-            .on('down', () => {
-                this.input.mouse.releasePointerLock();
-            });
+
+        this.input.on(eventos.DRAG_ENTER, (pointer, obj, dropZone) => {
+            dropZone.setTint(0xff0000);
+        });
+        this.input.on(eventos.DRAG_LEAVE, (pointer, obj, dropZone) => {
+            dropZone.clearTint();
+        });
+        this.input.on(eventos.DROP, (pointer, obj, dropZone) => {
+            obj.x = dropZone.x;
+            obj.y = dropZone.y;
+
+        });
+
 
 
 
