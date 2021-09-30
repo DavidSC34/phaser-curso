@@ -10,55 +10,37 @@ class Bootloader extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.image(['cubix', 'cubix_fondo']);
-        //cargar el dropzone boot
-        this.load.image('drop', 'drop.png');
+        this.load.spritesheet('tomato', 'tomato/tomato.png', {
+            frameWidth: 16,
+            frameHeight: 25,
+        }); //-->tamaño del recorte en la imagen
+        // this.load.spritesheet('tomato_spacing', 'tomato_spacing/tomato_spacing.png', {
+        //     frameWidth: 16,
+        //     frameHeight: 25,
+        //     margin: 1,
+        //     spacing: 2
+        // }); //-->tamaño del recorte en la imagen
     }
 
     create() {
-        this.cubix = this.add.image(100, 100, 'cubix').setInteractive();
-        this.input.setDraggable(this.cubix); //--> hacer draggable el objeto
+        // this.cubix = this.add.image(100, 100, 'cubix');
+        this.tomato = this.add.sprite(100, 100, 'tomato', 2).setScale(4);
+        // this.tomato_spacing = this.add.sprite(100, 200, 'tomato_spacing', 2).setScale(4);
+        //Crar un animacion
 
-        this.drop = this.add.image(100, 250, 'drop').setDepth(-1).setInteractive();
-        //convertir el objeto en un objeto de dropzone
-        this.drop.input.dropZone = true;
-
-
-        const eventos = Phaser.Input.Events;
-        this.input.on(eventos.DRAG_START, (pointer, obj, dragX, dragY) => {
-            obj.setScale(0.7);
-        });
-        this.input.on(eventos.DRAG, (pointer, obj, dragX, dragY) => {
-            obj.x = dragX;
-            obj.y = dragY;
-        });
-
-        this.input.on(eventos.DRAG_END, (pointer, obj, dropZone) => {
-
-            //Si no esta en la zona de dropzone, regrese al punto de partida
-
-            if (!dropZone) {
-                obj.x = obj.input.dragStartX;
-                obj.y = obj.input.dragStartY;
-            }
-            //regresar el objeto a su tamaño normal
-            obj.setScale(1);
-
+        this.anims.create({
+            key: 'tomato_walk',
+            frames: this.anims.generateFrameNumbers('tomato', {
+                // start: 0,
+                // end: 7
+                frames: [0, 1, 2, 3, 4, 5, 6, 7]
+            }),
+            repeat: -1,
+            frameRate: 15
         });
 
-        this.input.on(eventos.DRAG_ENTER, (pointer, obj, dropZone) => {
-            dropZone.setTint(0xff0000);
-        });
-        this.input.on(eventos.DRAG_LEAVE, (pointer, obj, dropZone) => {
-            dropZone.clearTint();
-        });
-        this.input.on(eventos.DROP, (pointer, obj, dropZone) => {
-            obj.x = dropZone.x;
-            obj.y = dropZone.y;
-
-        });
-
-
-
+        this.tomato.anims.play('tomato_walk');
+        // this.anims.play('tomato_walk', this.tomato);//--> forma alterna de animar
 
     }
 
