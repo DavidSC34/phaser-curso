@@ -10,34 +10,50 @@ class Bootloader extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.image(['cubix', 'cubix_fondo']);
-        //Ya que usamos una herramienta para generar atlas y animacion, la usamos
-        this.load.atlas('tomato', 'tomato/tomato.png', 'tomato/tomato_atlas.json');
-        this.load.animation('tomatoAnim', 'tomato/tomato_anim.json');
+
     }
 
     create() {
 
-        this.tomato = this.add.sprite(100, 100, 'tomato').setScale(4);
-        this.tomato.anims.play('tomato_walk'); //-->nombre que esta en el json
-        //Crear un animacion, forma sin usar la herramienta de generar animaciones
+        this.cubix = this.add.sprite(100, 100, 'cubix');
+        // this.cubix_fondo = this.add.sprite(180, 100, 'cubix_fondo');
+        //
+        this.tweens = this.add.tween({
+            targets: [this.cubix],
+            duration: 1000,
+            // ease: 'Bounce',
+            y: 300,
+            // x: {
+            //     value: 200,
+            //     ease: 'Elastic',
+            //     duration: 3000
+            // },
+            repeat: 0, //repeticion infinita
+            yoyo: true,
+            // delay: 1000,
+            // hold: 1000,
+            // repeatDelay: 1000 //antes de repetir vuelve,
+            onStart: () => {
+                console.log('Inicia la tween');
+            },
+            onRepeat: () => {
+                console.log('Se ha repetido');
+            },
+            onYoyo: (tween, obj, target) => {
+                target.setTint(0xff0000);
+                console.log('Se ha hecho YOYO');
+            },
+            onComplete: (tween, obj, target) => {
+                // target.setTint(0xff0000);
+                console.log('Se ha completado el tween');
+            },
+            // onCompleteParams: [this.cubix] //--> cuando usamos parametros en la funciones
+            onYoyoParams: [this.cubix]
 
-        // this.anims.create({
-        //     key: 'tomato_walk',
-        //     frames: this.anims.generateFrameNames('tomato', {
-        //         // suffix: '.png',
-        //         prefix: 'tomato_animation_1_',
-        //         start: 0,
-        //         end: 7,
-
-        //     }),
-        //     repeat: -1,
-        //     frameRate: 15
-        // });
-
-        // this.tomato.anims.play('tomato_walk');
-        // this.anims.play('tomato_walk', this.tomato);//--> forma alterna de animar
-
+        });
     }
+
+
 
     update(time, delta) {
 
