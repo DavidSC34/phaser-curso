@@ -7,7 +7,7 @@ const config = {
     type: Phaser.AUTO,
     width: '640',
     height: '360',
-    paren: 'contenedor',
+    parent: 'contenedor',
     pixelArt: true,
     backgroundColor: '#34495e',
     zoom: 1.5,
