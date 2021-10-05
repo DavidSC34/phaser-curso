@@ -10,75 +10,32 @@ class Bootloader extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
         this.load.image(['cubix', 'cubix_fondo']);
+        //cargar la fuente(imagen)
+        this.load.image('fuente', 'fuentes/fuente.png');
+        this.load.json('fuente_json', 'fuentes/fuente.json'); //--> solo lo carga en memoria
 
     }
 
     create() {
+        const fuenteConfig = this.cache.json.get('fuente_json');
+        console.log(fuenteConfig);
+        this.cache.bitmapFont.add('nombreFuente', Phaser.GameObjects.RetroFont.Parse(this, fuenteConfig)); //-->nombre interno para llamar la fuente
 
-        this.cubix = this.add.sprite(100, 100, 'cubix');
-        //Forma alterna de crear un timeline
+        this.texto = this.add.bitmapText(100, 100, 'nombreFuente', ' PUNTOS 0', 30, 0).setTint(0xffEE00); //-->ultimo parametro  es alineacion (0:izq, 1:centrado,2:derecha)
 
-        this.timeline = this.tweens.timeline({
-            targets: [this.cubix],
-            // duration: 1000, //--> cada animacion en un segundo
-            // totalDuration: 1000,
-            // paused: true, //--> de manera interna se auto-inicia
-            // duration: 2000,
-            loop: -1, //-->  con -1 se ejecuta infinitamente
-            tweens: [{
-                    x: 300,
-                    // duration: 2000, //-> este hara la animacion en 2 segundos
-                },
-                {
-                    y: 300,
-                    // offset: "-=500" // le resta la duracion general menos 500
-                },
-                {
-                    x: 100
-                },
-                {
-                    y: 100
-                }
-            ]
-        });
-        // this.timeline.play();
+        //-->cambiar de color se pone tinte
+        // this.texto.setText('Soy el nuevo texto');//--> no sabe de minusculas
+        // this.texto.setText('SOY EL NUEVO TEXTO');
+        this.puntos = 0;
 
-
-        // this.timeline = this.tweens.createTimeline();
-
-        //--> lleva dentro una tween
-
-        // this.timeline.add({
-        //     targets: [this.cubix],
-        //     x: 300,
-        //     ease: 'Bounce'
-
-        // });
-
-        // this.timeline.add({
-        //     targets: [this.cubix],
-        //     y: 300
-        // });
-
-        // this.timeline.add({
-        //     targets: [this.cubix],
-        //     x: 100
-        // });
-
-        // this.timeline.add({
-        //     targets: [this.cubix],
-        //     y: 100
-        // });
-
-        // this.timeline.play();
 
     }
 
 
 
     update(time, delta) {
-
-
+        // this.puntos++;
+        // this.texto.setText('PUNTOS ' + this.puntos);
     }
 }
 
